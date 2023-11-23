@@ -1,5 +1,5 @@
- import { Button } from "@mui/material";
-import { logout } from "../services/authService";
+import { Button } from "@mui/material";
+import { logout } from "../../services/authService";
 
 const LogoutButton: React.FC = () => {
   return (

@@ -1,17 +1,15 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import Dashboard from "./components/Dashboard";
-import LoginForm from "./components/LoginForm";
-import ProtectedRoute from "./components/ProtectedRoute";
-import RegisterForm from "./components/RegisterForm";
+import LoginForm from "./components/auth/LoginForm";
+import RegisterForm from "./components/auth/RegisterForm";
+import Dashboard from "./components/common/Dashboard";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 const App = () => {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<LoginForm />} />
-
         <Route path="/register" element={<RegisterForm />} />
-
         <Route
           path="/dashboard"
           element={

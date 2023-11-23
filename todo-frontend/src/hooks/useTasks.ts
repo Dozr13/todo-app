@@ -40,12 +40,16 @@ export const useTasks = () => {
     taskId: string,
     newStatus: Task["status"],
   ) => {
-    await updateTaskStatus(taskId, newStatus);
-    setTasks(
-      tasks.map((task) =>
+    try {
+      const updatedTasks = tasks.map((task) =>
         task._id === taskId ? { ...task, status: newStatus } : task,
-      ),
-    );
+      );
+      setTasks(updatedTasks);
+
+      await updateTaskStatus(taskId, newStatus);
+    } catch (error) {
+      console.error("Error updating task status:", error);
+    }
   };
 
   const handleUpdateTask = async (updatedTask: Task) => {
@@ -55,6 +59,7 @@ export const useTasks = () => {
 
   return {
     tasks,
+    setTasks,
     loading,
     handleAddTask,
     handleDeleteTask,

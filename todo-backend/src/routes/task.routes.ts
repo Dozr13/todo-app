@@ -70,6 +70,36 @@ router.put(
   },
 );
 
+router.patch(
+  "/:taskId",
+  authenticate,
+  async (req: RequestWithUser, res: Response) => {
+    if (!req.user) {
+      return res.status(401).send("Unauthorized");
+    }
+
+    try {
+      const { taskId } = req.params;
+      const { status } = req.body;
+      const userId = req.user.userId;
+
+      const updatedTask = await Task.findOneAndUpdate(
+        { _id: taskId, userId },
+        { status },
+        { new: true },
+      );
+
+      if (!updatedTask) {
+        return res.status(404).send("Task not found");
+      }
+
+      res.send(updatedTask);
+    } catch (error) {
+      res.status(500).send("Error updating the task status");
+    }
+  },
+);
+
 router.delete(
   "/:taskId",
   authenticate,

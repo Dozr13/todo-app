@@ -63,6 +63,7 @@ export const updateTaskStatus = async (taskId: string, newStatus: string) => {
       { status: newStatus },
       {
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       },
@@ -74,7 +75,7 @@ export const updateTaskStatus = async (taskId: string, newStatus: string) => {
 
 export const deleteTask = async (taskId: string) => {
   const token = localStorage.getItem("token");
-  console.log("taskId", taskId);
+  // console.log("taskId", taskId);
   try {
     await axios.delete(`${API_URL}/tasks/${taskId}`, {
       headers: {
