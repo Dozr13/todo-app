@@ -14,10 +14,10 @@ router.post("/", authenticate, async (req: RequestWithUser, res: Response) => {
   }
 
   try {
-    const { title, description, dueDate } = req.body;
+    const { title, description, dueDate, status } = req.body;
     const userId = req.user.userId;
 
-    const task = new Task({ title, description, dueDate, userId });
+    const task = new Task({ title, description, dueDate, status, userId });
     await task.save();
 
     res.status(201).send(task);
