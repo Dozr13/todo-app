@@ -80,16 +80,15 @@ router.delete(
 
     try {
       const { taskId } = req.params;
-      const userId = req.user.userId;
+      const deletedTask = await Task.findByIdAndDelete(taskId);
 
-      const task = await Task.findOneAndDelete({ _id: taskId, userId });
-
-      if (!task) {
+      if (!deletedTask) {
         return res.status(404).send("Task not found");
       }
 
-      res.send(task);
+      res.status(200).send({ message: "Task successfully deleted" });
     } catch (error) {
+      console.error("Error deleting task:", error);
       res.status(500).send("Error deleting the task");
     }
   },
