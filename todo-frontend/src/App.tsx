@@ -1,11 +1,10 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import AddTaskForm from "./components/AddTaskForm";
 import Dashboard from "./components/Dashboard";
 import LoginForm from "./components/LoginForm";
 import ProtectedRoute from "./components/ProtectedRoute";
 import RegisterForm from "./components/RegisterForm";
 
-function App() {
+const App = () => {
   return (
     <Router>
       <Routes>
@@ -21,17 +20,9 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/add-task"
-          element={
-            <ProtectedRoute>
-              <AddTaskForm />
-            </ProtectedRoute>
-          }
-        />
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;

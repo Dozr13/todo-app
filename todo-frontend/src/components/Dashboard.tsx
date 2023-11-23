@@ -1,4 +1,10 @@
-import { Box, CircularProgress, Container, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
 import { useTasks } from "../hooks/useTasks";
@@ -10,21 +16,36 @@ const Dashboard: React.FC = () => {
 
   return (
     <Container>
-      <LogoutButton />
-      <Link to="/add-task">Add Task</Link>
-      <Typography variant="h4">Dashboard</Typography>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        my={4}
+      >
+        <Typography variant="h4">Dashboard</Typography>
+        <Button
+          component={Link}
+          to="/add-task"
+          variant="contained"
+          color="primary"
+        >
+          Add a new Task
+        </Button>
+        <LogoutButton />
+      </Box>
       {loading ? (
-        <Box display="flex" justifyContent="center" alignItems="center">
+        <Box display="flex" justifyContent="center" alignItems="center" my={4}>
           <CircularProgress />
         </Box>
       ) : tasks.length > 0 ? (
         <TaskList
-          tasks={tasks}
           onDeleteTask={handleDeleteTask}
           onStatusChange={handleStatusChange}
         />
       ) : (
-        <Typography variant="subtitle1">No tasks available</Typography>
+        <Box display="flex" justifyContent="center" my={4}>
+          <Typography variant="subtitle1">No tasks available</Typography>
+        </Box>
       )}
     </Container>
   );
