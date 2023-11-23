@@ -1,8 +1,6 @@
 import { useSnackbar } from "notistack";
-import { useState } from "react";
 
 export const useSnackbarActions = () => {
-  const [open, setOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
   const showSuccessSnackbar = (message: string) => {
