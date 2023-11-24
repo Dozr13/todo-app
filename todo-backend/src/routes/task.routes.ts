@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.post("/", authenticate, async (req: RequestWithUser, res: Response) => {
   if (!req.user?.userId) {
-    return res.status(401).send("Unauthorized");
+    return res.status(401).json({ message: "Unauthorized" });
   }
 
   try {
@@ -20,24 +20,26 @@ router.post("/", authenticate, async (req: RequestWithUser, res: Response) => {
     const task = new Task({ title, description, dueDate, status, userId });
     await task.save();
 
-    res.status(201).send(task);
+    res.status(201).json(task);
   } catch (error) {
-    res.status(500).send("Error creating the task");
+    console.error("Error creating task:", error);
+    res.status(500).json({ message: "Error creating the task" });
   }
 });
 
 router.get("/", authenticate, async (req: RequestWithUser, res: Response) => {
   if (!req.user) {
-    return res.status(401).send("Unauthorized");
+    return res.status(401).json({ message: "Unauthorized" });
   }
 
   try {
     const userId = req.user.userId;
     const tasks = await Task.find({ userId });
 
-    res.send(tasks);
+    res.json(tasks);
   } catch (error) {
-    res.status(500).send("Error fetching tasks");
+    console.error("Error fetching tasks:", error);
+    res.status(500).json({ message: "Error fetching tasks" });
   }
 });
 
@@ -46,7 +48,7 @@ router.put(
   authenticate,
   async (req: RequestWithUser, res: Response) => {
     if (!req.user) {
-      return res.status(401).send("Unauthorized");
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
     try {
@@ -60,12 +62,13 @@ router.put(
       );
 
       if (!task) {
-        return res.status(404).send("Task not found");
+        return res.status(404).json({ message: "Task not found" });
       }
 
-      res.send(task);
+      res.json(task);
     } catch (error) {
-      res.status(500).send("Error updating the task");
+      console.error("Error updating task:", error);
+      res.status(500).json({ message: "Error updating the task" });
     }
   },
 );
@@ -75,7 +78,7 @@ router.patch(
   authenticate,
   async (req: RequestWithUser, res: Response) => {
     if (!req.user) {
-      return res.status(401).send("Unauthorized");
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
     try {
@@ -90,12 +93,13 @@ router.patch(
       );
 
       if (!updatedTask) {
-        return res.status(404).send("Task not found");
+        return res.status(404).json({ message: "Task not found" });
       }
 
-      res.send(updatedTask);
+      res.json(updatedTask);
     } catch (error) {
-      res.status(500).send("Error updating the task status");
+      console.error("Error updating task status:", error);
+      res.status(500).json({ message: "Error updating the task status" });
     }
   },
 );
@@ -105,7 +109,7 @@ router.delete(
   authenticate,
   async (req: RequestWithUser, res: Response) => {
     if (!req.user) {
-      return res.status(401).send("Unauthorized");
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
     try {
@@ -113,13 +117,13 @@ router.delete(
       const deletedTask = await Task.findByIdAndDelete(taskId);
 
       if (!deletedTask) {
-        return res.status(404).send("Task not found");
+        return res.status(404).json({ message: "Task not found" });
       }
 
-      res.status(200).send({ message: "Task successfully deleted" });
+      res.status(200).json({ message: "Task successfully deleted" });
     } catch (error) {
       console.error("Error deleting task:", error);
-      res.status(500).send("Error deleting the task");
+      res.status(500).json({ message: "Error deleting the task" });
     }
   },
 );

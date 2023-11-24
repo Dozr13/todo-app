@@ -1,89 +1,53 @@
-import axios from "axios";
 import { Task } from "../interfaces/task";
+import axiosInstance from "../utils/axiosInstance";
+import handleError from "../utils/errorHandler";
 
-const API_URL = process.env.TODO_APP_BACKEND_URL || "http://localhost:3001";
-
-export const getTasks = async () => {
-  const token = localStorage.getItem("token");
+export const getTasks = async (): Promise<Task[]> => {
   try {
-    const response = await axios.get(`${API_URL}/tasks`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axiosInstance.get("/tasks");
     const tasks = response.data.map((task: Task) => ({
       ...task,
       dueDate: new Date(task.dueDate),
     }));
-
     return tasks;
   } catch (error) {
-    console.error("Error fetching tasks:", error);
-    return [];
+    return handleError(error);
   }
 };
 
-export const addTask = async (task: Omit<Task, "_id">) => {
-  const token = localStorage.getItem("token");
+export const addTask = async (task: Omit<Task, "_id">): Promise<Task> => {
   try {
-    const response = await axios.post(`${API_URL}/tasks`, task, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axiosInstance.post("/tasks", task);
     return response.data;
   } catch (error) {
-    console.error("Error adding task:", error);
-    throw error;
+    return handleError(error);
   }
 };
 
-export const updateTask = async (task: Task) => {
-  const token = localStorage.getItem("token");
+export const updateTask = async (task: Task): Promise<Task> => {
   try {
-    const response = await axios.put(`${API_URL}/tasks/${task._id}`, task, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axiosInstance.put(`/tasks/${task._id}`, task);
     return response.data;
   } catch (error) {
-    console.error("Error updating task:", error);
-    throw error;
+    return handleError(error);
   }
 };
 
-export const updateTaskStatus = async (taskId: string, newStatus: string) => {
-  const token = localStorage.getItem("token");
+export const updateTaskStatus = async (
+  taskId: string,
+  newStatus: string,
+): Promise<void> => {
   try {
-    await axios.patch(
-      `${API_URL}/tasks/${taskId}`,
-      { status: newStatus },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
+    await axiosInstance.patch(`/tasks/${taskId}`, { status: newStatus });
   } catch (error) {
-    console.error("Error updating task status:", error);
+    return handleError(error);
   }
 };
 
-export const deleteTask = async (taskId: string) => {
-  const token = localStorage.getItem("token");
-  // console.log("taskId", taskId);
+export const deleteTask = async (taskId: string): Promise<void> => {
   try {
-    await axios.delete(`${API_URL}/tasks/${taskId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    await axiosInstance.delete(`/tasks/${taskId}`);
   } catch (error) {
-    console.error("Error deleting task:", error);
-    throw error;
+    return handleError(error);
   }
 };

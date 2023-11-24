@@ -1,32 +1,28 @@
-const API_URL = process.env.TODO_APP_BACKEND_URL || "http://localhost:3001";
+import axiosInstance from "../utils/axiosInstance";
+import handleError from "../utils/errorHandler";
 
 export const login = async (username: string, password: string) => {
-  const response = await fetch(`${API_URL}/auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ username, password }),
-  });
-  if (!response.ok) {
-    throw new Error("Login failed");
+  try {
+    const response = await axiosInstance.post("/auth/login", {
+      username,
+      password,
+    });
+    return response.data;
+  } catch (error) {
+    return handleError(error);
   }
-  const data = await response.json();
-  return data;
 };
 
 export const register = async (username: string, password: string) => {
-  const response = await fetch(`${API_URL}/auth/register`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ username, password }),
-  });
-  if (!response.ok) {
-    throw new Error("Registration failed");
+  try {
+    const response = await axiosInstance.post("/auth/register", {
+      username,
+      password,
+    });
+    return response.data;
+  } catch (error) {
+    return handleError(error);
   }
-  return response.json();
 };
 
 export const logout = () => {
