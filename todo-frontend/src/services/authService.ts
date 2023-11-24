@@ -26,6 +26,19 @@ export const register = async (username: string, password: string) => {
 };
 
 export const logout = () => {
-  localStorage.removeItem("authToken");
-  window.location.href = "/login";
+  try {
+    localStorage.removeItem("authToken");
+    window.location.href = "/login";
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+export const deleteAccount = async () => {
+  try {
+    const response = await axiosInstance.delete("/auth/delete-account");
+    return response.data;
+  } catch (error) {
+    return handleError(error);
+  }
 };

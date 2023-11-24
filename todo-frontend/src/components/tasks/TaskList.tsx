@@ -4,7 +4,7 @@ import { useSnackbarActions } from "../../hooks/useSnackbarActions";
 import { useTasks } from "../../hooks/useTasks";
 import { Task } from "../../interfaces/task";
 import TaskListItem from "./TaskListItem";
-import TaskModal from "./TaskModal";
+import TaskModal from "../modals/TaskModal";
 
 const TaskList = () => {
   const { showSuccessSnackbar, showErrorSnackbar } = useSnackbarActions();

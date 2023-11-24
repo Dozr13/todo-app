@@ -1,7 +1,7 @@
 import { Button, Container, Paper, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { register } from "../../services/authService";
+import { register } from "../../../services/authService";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
@@ -38,17 +38,17 @@ const RegisterForm = () => {
   return (
     <Container
       maxWidth="sm"
-      style={{
+      sx={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         height: "100vh",
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "#e1e1e1",
       }}
     >
       <Paper
-        style={{
+        sx={{
           padding: "20px",
           maxWidth: 500,
           backgroundColor: "#ffffff",
@@ -83,18 +83,14 @@ const RegisterForm = () => {
             color="primary"
             variant="contained"
             fullWidth
-            style={{ marginTop: "16px" }}
+            sx={{ mt: 2 }}
           >
             Register
           </Button>
           {error && <Typography color="error">{error}</Typography>}
         </form>
       </Paper>
-      <Button
-        color="primary"
-        style={{ marginTop: "16px" }}
-        onClick={() => navigate("/login")}
-      >
+      <Button color="primary" sx={{ mt: 2 }} onClick={() => navigate("/login")}>
         Already registered? Login here
       </Button>
     </Container>

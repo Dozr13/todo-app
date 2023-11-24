@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
 import express, { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { authenticate } from "../middleware/auth.middleware";
+import { Task } from "../models/task.model";
 import { User } from "../models/user.model";
 
 const router = express.Router();
@@ -48,5 +50,26 @@ router.post("/login", async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error during login process" });
   }
 });
+
+router.delete(
+  "/delete-account",
+  authenticate,
+  async (req: Request, res: Response) => {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    try {
+      await Task.deleteMany({ userId });
+      await User.findByIdAndDelete(userId);
+
+      res.status(200).json({ message: "Account successfully deleted" });
+    } catch (error) {
+      res.status(500).json({ message: "Error deleting account" });
+    }
+  },
+);
 
 export default router;

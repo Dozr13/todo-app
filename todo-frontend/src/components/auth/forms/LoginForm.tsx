@@ -1,7 +1,7 @@
 import { Button, Container, Paper, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../../services/authService";
+import { login } from "../../../services/authService";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -32,18 +32,18 @@ const LoginForm = () => {
   return (
     <Container
       maxWidth="sm"
-      style={{
+      sx={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         height: "100vh",
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "#e1e1e1",
       }}
     >
       <Paper
-        style={{
-          padding: "20px",
+        sx={{
+          p: "20px",
           maxWidth: 500,
           backgroundColor: "#ffffff",
           boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
@@ -77,7 +77,7 @@ const LoginForm = () => {
             color="primary"
             variant="contained"
             fullWidth
-            style={{ marginTop: "16px" }}
+            sx={{ mt: 2 }}
           >
             Login
           </Button>
@@ -86,7 +86,7 @@ const LoginForm = () => {
       </Paper>
       <Button
         color="primary"
-        style={{ marginTop: "16px" }}
+        sx={{ mt: 2 }}
         onClick={() => navigate("/register")}
       >
         Not registered yet? Sign up here
