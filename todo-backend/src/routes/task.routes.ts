@@ -34,7 +34,7 @@ router.get("/", authenticate, async (req: RequestWithUser, res: Response) => {
 
   try {
     const userId = req.user.userId;
-    const tasks = await Task.find({ userId });
+    const tasks = await Task.find({ userId }).sort({ orderIndex: 1 });
 
     res.json(tasks);
   } catch (error) {
@@ -42,6 +42,37 @@ router.get("/", authenticate, async (req: RequestWithUser, res: Response) => {
     res.status(500).json({ message: "Error fetching tasks" });
   }
 });
+
+router.put(
+  "/order",
+  authenticate,
+  async (req: RequestWithUser, res: Response) => {
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const { order } = req.body;
+
+    try {
+      const userId = req.user.userId;
+
+      await Promise.all(
+        order.map((taskId: string, index: number) =>
+          Task.findOneAndUpdate(
+            { _id: taskId, userId: userId },
+            { orderIndex: index },
+            { new: true },
+          ),
+        ),
+      );
+
+      res.status(200).json({ message: "Task order updated successfully" });
+    } catch (error) {
+      console.error("Error updating task order:", error);
+      res.status(500).json({ message: "Error updating task order" });
+    }
+  },
+);
 
 router.put(
   "/:taskId",

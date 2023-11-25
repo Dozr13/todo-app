@@ -33,6 +33,14 @@ export const updateTask = async (task: Task): Promise<Task> => {
   }
 };
 
+export const updateTaskOrder = async (taskIds: string[]) => {
+  try {
+    await axiosInstance.put("/tasks/order", { order: taskIds });
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
 export const updateTaskStatus = async (
   taskId: string,
   newStatus: string,

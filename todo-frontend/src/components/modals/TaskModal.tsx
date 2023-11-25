@@ -4,15 +4,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useState } from "react";
-import { Task } from "../../interfaces/task";
-
-interface TaskModalProps {
-  mode: "add" | "edit" | "delete";
-  task: Task;
-  onSave: (task: Task) => void;
-  onDelete: () => void;
-  onClose: () => void;
-}
+import { Task, TaskModalProps } from "../../interfaces/task";
+import { ModalMode } from "../../types/types";
 
 const TaskModal = ({
   mode,
@@ -27,8 +20,9 @@ const TaskModal = ({
     task?.dueDate || new Date(),
   );
 
-  const isDeleteMode = mode === "delete";
-  const isAddMode = mode === "add";
+  const isDeleteMode = mode === ModalMode.Delete;
+  const isAddMode = mode === ModalMode.Add;
+  const isDuplicateMode = mode === ModalMode.Duplicate;
 
   const handleSave = () => {
     const updatedTask: Task = {
@@ -90,8 +84,13 @@ const TaskModal = ({
           }}
         >
           <Typography variant="h6" gutterBottom>
-            {isAddMode ? "Add a New Task" : `Edit Task: ${task.title}`}
+            {isAddMode
+              ? "Add a New Task"
+              : isDuplicateMode
+              ? "Duplicate Task"
+              : `Edit Task: ${task.title}`}
           </Typography>
+
           <TextField
             label="Title"
             value={title}

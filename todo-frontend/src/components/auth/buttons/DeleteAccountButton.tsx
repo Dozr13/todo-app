@@ -6,10 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
-
-interface DeleteAccountButtonProps {
-  onDelete: () => Promise<void>;
-}
+import { DeleteAccountButtonProps } from "../../../interfaces/task";
 
 const DeleteAccountButton = ({ onDelete }: DeleteAccountButtonProps) => {
   const [open, setOpen] = useState(false);

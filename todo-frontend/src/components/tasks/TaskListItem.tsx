@@ -1,22 +1,13 @@
-import DeleteIcon from "@mui/icons-material/Delete";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import {
   Box,
   Card,
   CardContent,
   Grid,
-  IconButton,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Task } from "../../interfaces/task";
-
-interface TaskListItemProps {
-  task: Task;
-  onClick: (task: Task) => void;
-  onDelete: () => void;
-  onStatusChange: (taskId: string, newStatus: Task["status"]) => Promise<void>;
-}
+import { Task, TaskListItemProps } from "../../interfaces/task";
 
 const getStatusColor = (status: Task["status"]) => {
   switch (status) {
@@ -34,14 +25,10 @@ const getStatusColor = (status: Task["status"]) => {
 const TaskListItem = ({
   task,
   onClick,
-  onDelete,
   onStatusChange,
+  dragHandleProps,
+  provided,
 }: TaskListItemProps) => {
-  const handleDeleteClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    onDelete();
-  };
-
   const cycleStatus = () => {
     const nextStatus =
       task.status === "pending"
@@ -54,21 +41,21 @@ const TaskListItem = ({
 
   return (
     <Card
+      ref={provided.innerRef}
+      {...provided.draggableProps}
+      {...dragHandleProps}
       onClick={() => onClick(task)}
       sx={{
         marginBottom: 2,
         cursor: "pointer",
-        "&:nth-of-type(odd)": {
-          backgroundColor: "action.hover",
-        },
         "&:hover": {
           boxShadow: 6,
         },
       }}
     >
       <CardContent>
-        <Grid container alignItems="center" spacing={2}>
-          <Grid item xs={3}>
+        <Grid container alignItems="center" spacing={2} {...dragHandleProps}>
+          <Grid item xs={4}>
             <Typography variant="h6" noWrap>
               {task.title}
             </Typography>
@@ -98,31 +85,6 @@ const TaskListItem = ({
                 {task.description}
               </Typography>
             </Tooltip>
-          </Grid>
-          <Grid item xs={1} textAlign="right">
-            <IconButton
-              onClick={handleDeleteClick}
-              color="error"
-              title="Delete task"
-              sx={{
-                "& .MuiSvgIcon-root": {
-                  color: "#d32f2f",
-                  "&:hover": {
-                    color: "#9a0007",
-                  },
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <DeleteIcon />
-              </Box>
-            </IconButton>
           </Grid>
         </Grid>
       </CardContent>

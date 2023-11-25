@@ -1,23 +1,44 @@
-import { Box, Button, Modal, Typography } from "@mui/material";
-import { ModalMode, useModal } from "../../hooks/useModal";
+import { Box, Divider } from "@mui/material";
+import { useCallback, useState } from "react";
+import {
+  DragDropContext,
+  DraggableProvided,
+  DropResult,
+} from "react-beautiful-dnd";
+import { useModal } from "../../hooks/useModal";
 import { useSnackbarActions } from "../../hooks/useSnackbarActions";
+import { useTaskOperations } from "../../hooks/useTaskOperations";
 import { useTasks } from "../../hooks/useTasks";
 import { Task } from "../../interfaces/task";
+import { ModalMode } from "../../types/types";
+import {
+  createHandleDelete,
+  createHandleSaveTask,
+} from "../../utils/taskListUtils";
+import AddOrCopyArea from "../dnd/AddOrCopyArea";
+import DeleteArea from "../dnd/DeleteArea";
+import TaskArea from "../dnd/TaskArea";
+import TaskModalContainer from "../modals/TaskModalContainer";
 import TaskListItem from "./TaskListItem";
-import TaskModal from "../modals/TaskModal";
 
 const TaskList = () => {
-  const { showSuccessSnackbar, showErrorSnackbar } = useSnackbarActions();
+  const { tasks, fetchTasks } = useTasks();
   const {
-    tasks,
     handleAddTask,
     handleDeleteTask,
-    handleStatusChange,
     handleUpdateTask,
-  } = useTasks();
+    handleTaskOrderUpdate,
+    handleStatusChange,
+  } = useTaskOperations({ fetchTasks });
+  const { showSuccessSnackbar, showErrorSnackbar } = useSnackbarActions();
   const { modalMode, openModal, closeModal, selectedTask } = useModal();
+  const [isDragging, setIsDragging] = useState(false);
 
-  const openAddTaskModal = () => {
+  const handleDragStart = () => {
+    setIsDragging(true);
+  };
+
+  const openAddTaskModal = useCallback(() => {
     openModal(ModalMode.Add, {
       _id: "",
       title: "",
@@ -25,100 +46,83 @@ const TaskList = () => {
       dueDate: new Date(),
       status: "pending",
     });
-  };
+  }, [openModal]);
 
-  const handleSaveTask = async (task: Task) => {
-    try {
-      if (modalMode === ModalMode.Add) {
-        await handleAddTask(task);
-        showSuccessSnackbar("Task added successfully");
-      } else if (modalMode === ModalMode.Edit) {
-        await handleUpdateTask(task);
-        showSuccessSnackbar("Task updated successfully");
+  const handleDragEnd = useCallback(
+    async (result: DropResult) => {
+      if (!result.destination) return;
+
+      const taskId = result.draggableId;
+      const task = tasks.find((task) => task._id === taskId);
+      if (!task) return;
+
+      if (result.destination.droppableId === "delete-area") {
+        openModal(ModalMode.Delete, task);
+      } else if (result.destination.droppableId === "copy-area") {
+        openModal(ModalMode.Duplicate, { ...task, _id: "" });
+      } else {
+        const reorderedTasks = Array.from(tasks);
+        const [removed] = reorderedTasks.splice(result.source.index, 1);
+        reorderedTasks.splice(result.destination.index, 0, removed);
+
+        handleTaskOrderUpdate(reorderedTasks.map((t) => t._id));
       }
-    } catch (error) {
-      showErrorSnackbar(
-        "An error occurred while updating the task, please try again later.",
+
+      setIsDragging(false);
+    },
+    [tasks, openModal, handleTaskOrderUpdate],
+  );
+
+  const renderTaskItem = useCallback(
+    (task: Task, provided: DraggableProvided) => {
+      return (
+        <TaskListItem
+          task={task}
+          onClick={() => openModal(ModalMode.Edit, task)}
+          onStatusChange={handleStatusChange}
+          dragHandleProps={provided.dragHandleProps}
+          provided={provided}
+        />
       );
-    } finally {
-      closeModal();
-    }
-  };
-
-  const handleDeleteClick = (task: Task) => {
-    openModal(ModalMode.Delete, task);
-  };
-
-  const handleDelete = async () => {
-    if (selectedTask && selectedTask._id) {
-      try {
-        await handleDeleteTask(selectedTask._id);
-        showSuccessSnackbar("Task deleted successfully");
-      } catch (error) {
-        showErrorSnackbar(
-          "An error occurred while deleting the task, please try again later.",
-        );
-      } finally {
-        closeModal();
-      }
-    }
-  };
+    },
+    [handleStatusChange, openModal],
+  );
 
   return (
     <Box>
-      <Box display="flex" justifyContent="center" mb={2}>
-        <Button variant="contained" onClick={openAddTaskModal}>
-          Add a new task
-        </Button>
-      </Box>
-
-      {tasks && tasks.length > 0 ? (
-        tasks.map((task) => (
-          <TaskListItem
-            key={task._id}
-            task={task}
-            onClick={() => openModal(ModalMode.Edit, task)}
-            onDelete={() => handleDeleteClick(task)}
-            onStatusChange={handleStatusChange}
+      <DragDropContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <AddOrCopyArea
+            isDragging={isDragging}
+            onAddClick={openAddTaskModal}
           />
-        ))
-      ) : (
-        <Box display="flex" justifyContent="center">
-          <Typography variant="subtitle1">No tasks available</Typography>
-        </Box>
-      )}
 
-      <Modal open={modalMode !== ModalMode.Closed} onClose={closeModal}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            bgcolor: "white",
-            p: 4,
-            minWidth: 300,
-            maxWidth: 600,
-            borderRadius: 2,
-            boxShadow: 24,
-            overflowY: "auto",
-          }}
-        >
-          <TaskModal
-            mode={
-              modalMode === ModalMode.Add
-                ? "add"
-                : modalMode === ModalMode.Edit
-                ? "edit"
-                : "delete"
-            }
-            task={selectedTask!}
-            onSave={handleSaveTask}
-            onDelete={handleDelete}
-            onClose={closeModal}
-          />
+          <DeleteArea />
         </Box>
-      </Modal>
+        <Divider sx={{ my: 2 }} />
+        <TaskArea tasks={tasks} renderTaskItem={renderTaskItem} />
+      </DragDropContext>
+
+      <TaskModalContainer
+        modalMode={modalMode}
+        task={selectedTask ?? null}
+        handleSaveTask={createHandleSaveTask(
+          modalMode,
+          handleAddTask,
+          handleUpdateTask,
+          showSuccessSnackbar,
+          showErrorSnackbar,
+          closeModal,
+        )}
+        handleDelete={createHandleDelete(
+          selectedTask,
+          handleDeleteTask,
+          showSuccessSnackbar,
+          showErrorSnackbar,
+          closeModal,
+        )}
+        closeModal={closeModal}
+      />
     </Box>
   );
 };

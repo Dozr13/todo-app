@@ -51,7 +51,16 @@ const Dashboard: React.FC = () => {
           <CircularProgress />
         </Box>
       ) : (
-        <TaskList />
+        <Box
+          sx={{
+            backgroundColor: "#e3e3e3",
+            p: 4,
+            borderRadius: 4,
+            height: "fit-content",
+          }}
+        >
+          <TaskList />
+        </Box>
       )}
       <Box
         sx={{
