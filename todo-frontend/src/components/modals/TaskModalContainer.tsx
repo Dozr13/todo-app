@@ -1,5 +1,5 @@
 import { Box, Modal } from "@mui/material";
-import { TaskModalContainerProps } from "../../interfaces/task";
+import { TaskModalContainerProps } from "../../interfaces/interfaceProps";
 import { ModalMode } from "../../types/types";
 import TaskModal from "./TaskModal";
 

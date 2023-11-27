@@ -1,5 +1,5 @@
 import { DropResult } from "react-beautiful-dnd";
-import { Task } from "../interfaces/task";
+import { Task } from "../interfaces/interfaceProps";
 
 export enum ModalMode {
   Closed = "closed",

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Task } from "../interfaces/task";
+import { Task } from "../interfaces/interfaceProps";
 import { getTasks } from "../services/apiService";
 
 export const useTasks = () => {

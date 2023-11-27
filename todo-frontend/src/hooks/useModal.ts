@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { Task } from "../interfaces/task";
+import { Task } from "../interfaces/interfaceProps";
 import { ModalMode } from "../types/types";
 
 export const useModal = () => {

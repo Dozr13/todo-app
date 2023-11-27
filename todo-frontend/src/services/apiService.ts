@@ -1,4 +1,4 @@
-import { Task } from "../interfaces/task";
+import { Task } from "../interfaces/interfaceProps";
 import axiosInstance from "../utils/axiosInstance";
 import handleError from "../utils/errorHandler";
 

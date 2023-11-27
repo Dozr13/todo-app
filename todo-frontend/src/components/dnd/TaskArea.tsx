@@ -1,6 +1,6 @@
 import { List } from "@mui/material";
 import { Draggable } from "react-beautiful-dnd";
-import { TaskAreaProps } from "../../interfaces/task";
+import { TaskAreaProps } from "../../interfaces/interfaceProps";
 import { StrictModeDroppable } from "./StrictModeDroppable";
 
 const TaskArea = ({ tasks, renderTaskItem }: TaskAreaProps) => (

@@ -1,6 +1,7 @@
 import { Box, CircularProgress, Container, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { dashboardStyles } from "../../constants/styles";
 import { useSnackbarActions } from "../../hooks/useSnackbarActions";
 import { useTasks } from "../../hooks/useTasks";
 import { deleteAccount } from "../../services/authService";
@@ -17,7 +18,7 @@ const Dashboard: React.FC = () => {
     try {
       await deleteAccount();
       showSuccessSnackbar("Account successfully deleted");
-      localStorage.removeItem("authToken");
+      localStorage.removeItem("token");
       navigate("/login");
     } catch (error) {
       showErrorSnackbar(
@@ -28,48 +29,20 @@ const Dashboard: React.FC = () => {
 
   return (
     <Container>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          my: 4,
-        }}
-      >
+      <Box sx={dashboardStyles.header}>
         <Typography variant="h4">Dashboard</Typography>
         <LogoutButton />
       </Box>
       {loading ? (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            my: 4,
-          }}
-        >
+        <Box sx={dashboardStyles.loading}>
           <CircularProgress />
         </Box>
       ) : (
-        <Box
-          sx={{
-            backgroundColor: "#e3e3e3",
-            p: 4,
-            borderRadius: 4,
-            height: "fit-content",
-          }}
-        >
+        <Box sx={dashboardStyles.taskListContainer}>
           <TaskList />
         </Box>
       )}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          my: 4,
-        }}
-      >
+      <Box sx={dashboardStyles.deleteAccount}>
         <DeleteAccountButton onDelete={handleAccountDeletion} />
       </Box>
     </Container>

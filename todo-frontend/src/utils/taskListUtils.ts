@@ -1,4 +1,4 @@
-import { Task } from "../interfaces/task";
+import { Task } from "../interfaces/interfaceProps";
 
 export const newTaskTemplate = (): Task => ({
   _id: "",

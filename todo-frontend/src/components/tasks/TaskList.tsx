@@ -9,7 +9,7 @@ import { useModal } from "../../hooks/useModal";
 import { useSnackbarActions } from "../../hooks/useSnackbarActions";
 import { useTaskOperations } from "../../hooks/useTaskOperations";
 import { useTasks } from "../../hooks/useTasks";
-import { Task } from "../../interfaces/task";
+import { Task } from "../../interfaces/interfaceProps";
 import { ModalMode } from "../../types/types";
 import {
   createHandleDelete,

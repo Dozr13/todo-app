@@ -1,8 +1,8 @@
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { Box, IconButton, Tooltip, Typography } from "@mui/material";
+import { AddOrCopyAreaProps } from "../../interfaces/interfaceProps";
 import { StrictModeDroppable } from "./StrictModeDroppable";
-import { AddOrCopyAreaProps } from "../../interfaces/task";
 
 const AddOrCopyArea = ({ isDragging, onAddClick }: AddOrCopyAreaProps) => {
   return (

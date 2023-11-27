@@ -7,7 +7,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Task, TaskListItemProps } from "../../interfaces/task";
+import { Task, TaskListItemProps } from "../../interfaces/interfaceProps";
 
 const getStatusColor = (status: Task["status"]) => {
   switch (status) {

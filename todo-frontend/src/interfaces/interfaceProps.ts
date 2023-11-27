@@ -9,12 +9,30 @@ export interface AddOrCopyAreaProps {
   onAddClick: () => void;
 }
 
-export interface DateSelectorProps {
-  children: React.ReactNode;
-}
-
 export interface DeleteAccountButtonProps {
   onDelete: () => Promise<void>;
+}
+
+export interface FormFieldProps {
+  name: string;
+  label: string;
+  type?: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export interface LoginData {
+  username: string;
+  password: string;
+}
+
+export interface NavigationLinkProps {
+  to: string;
+  text: string;
+}
+
+export interface ReactNodeChildrenProps {
+  children: React.ReactNode;
 }
 
 export interface Task {
@@ -53,6 +71,9 @@ export interface TaskModalProps {
   onDelete: () => void;
   onClose: () => void;
 }
-export interface useTaskOperationsProps {
+
+export interface TaskOperationsProps {
   fetchTasks: () => Promise<void>;
 }
+
+export interface UserData extends LoginData {}

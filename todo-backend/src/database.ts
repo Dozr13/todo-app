@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 
 const MONGODB_URI = process.env.MONGODB_URI || "default-mongodb-uri";
 
-// TODO: Uncommented to ensure server connection for review
 console.log("Connecting to MongoDB at URI:", MONGODB_URI);
 
 mongoose

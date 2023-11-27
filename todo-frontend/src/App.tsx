@@ -2,7 +2,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import LoginForm from "./components/auth/forms/LoginForm";
 import RegisterForm from "./components/auth/forms/RegisterForm";
-import Dashboard from "./components/common/Dashboard";
+import Dashboard from "./components/dashboard/Dashboard";
 
 const App = () => {
   return (

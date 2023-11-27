@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { Task, useTaskOperationsProps } from "../interfaces/task";
+import { Task, TaskOperationsProps } from "../interfaces/interfaceProps";
 import {
   addTask,
   deleteTask,
@@ -8,7 +8,7 @@ import {
   updateTaskStatus,
 } from "../services/apiService";
 
-export const useTaskOperations = ({ fetchTasks }: useTaskOperationsProps) => {
+export const useTaskOperations = ({ fetchTasks }: TaskOperationsProps) => {
   const handleAddTask = useCallback(
     async (newTask: Task) => {
       await addTask(newTask);

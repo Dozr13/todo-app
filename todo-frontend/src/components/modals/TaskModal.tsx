@@ -4,7 +4,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useState } from "react";
-import { Task, TaskModalProps } from "../../interfaces/task";
+import { Task, TaskModalProps } from "../../interfaces/interfaceProps";
 import { ModalMode } from "../../types/types";
 
 const TaskModal = ({
