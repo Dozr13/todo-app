@@ -14,8 +14,12 @@ router.post("/", authenticate, async (req: RequestWithUser, res: Response) => {
   }
 
   try {
-    const { title, description, dueDate, status } = req.body;
+    const { title, dueDate, status } = req.body;
+    let { description } = req.body;
     const userId = req.user.userId;
+
+    description =
+      description || "No description provided, click here to add one";
 
     const task = new Task({ title, description, dueDate, status, userId });
     await task.save();

@@ -1,97 +1,75 @@
-import { Button, Container, Paper, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import { Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { initialLoginData } from "../../../constants/initialValues";
+import useAuthForm from "../../../hooks/useAuthForm";
+import { useSnackbarActions } from "../../../hooks/useSnackbarActions";
+import { LoginData } from "../../../interfaces/interfaceProps";
 import { login } from "../../../services/authService";
+import FormField from "../../common/FormField";
+import CommonFormLayout from "../../layout/CommonAuthFormLayout";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const [loginData, setLoginData] = useState({ username: "", password: "" });
-  const [error, setError] = useState("");
+  const { showSuccessSnackbar, showErrorSnackbar } = useSnackbarActions();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLoginData({ ...loginData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!loginData.username || !loginData.password) {
-      setError("Username and password are required");
-      return;
-    }
-
+  const submitHandler = async (data: LoginData) => {
     try {
-      const response = await login(loginData.username, loginData.password);
-      localStorage.setItem("token", response.token);
+      await login(data.username, data.password);
+      showSuccessSnackbar("Login successful!");
       navigate("/dashboard");
     } catch (error) {
-      console.error("Login error in LoginForm:", error);
-      setError("Failed to login");
+      showErrorSnackbar(error as string);
+      console.error("Login failed:", error);
     }
   };
 
+  const { formData, handleChange, handleSubmit, error } = useAuthForm(
+    initialLoginData,
+    submitHandler,
+  );
+
   return (
-    <Container
-      maxWidth="sm"
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        backgroundColor: "#e1e1e1",
-      }}
-    >
-      <Paper
-        sx={{
-          p: "20px",
-          maxWidth: 500,
-          backgroundColor: "#ffffff",
-          boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        <Typography variant="h6" align="center">
+    <CommonFormLayout>
+      <Typography variant="h6" align="center">
+        Login
+      </Typography>
+      <form onSubmit={handleSubmit}>
+        <FormField
+          name="username"
+          label="Username"
+          value={formData.username}
+          onChange={handleChange}
+        />
+        <FormField
+          name="password"
+          label="Password"
+          type="password"
+          value={formData.password}
+          onChange={handleChange}
+        />
+        <Button
+          type="submit"
+          color="primary"
+          variant="contained"
+          fullWidth
+          sx={{ mt: 2 }}
+        >
           Login
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            name="username"
-            label="Username"
-            fullWidth
-            margin="normal"
-            value={loginData.username}
-            onChange={handleChange}
-            autoComplete="username"
-          />
-          <TextField
-            name="password"
-            label="Password"
-            type="password"
-            fullWidth
-            margin="normal"
-            value={loginData.password}
-            onChange={handleChange}
-            autoComplete="current-password"
-          />
-          <Button
-            type="submit"
-            color="primary"
-            variant="contained"
-            fullWidth
-            sx={{ mt: 2 }}
-          >
-            Login
-          </Button>
-          {error && <Typography color="error">{error}</Typography>}
-        </form>
-      </Paper>
+        </Button>
+        {error && <Typography color="error">{error}</Typography>}
+      </form>
+      <Typography variant="body2" align="center" sx={{ mt: 2, mb: 1 }}>
+        Not registered yet?
+      </Typography>
       <Button
         color="primary"
-        sx={{ mt: 2 }}
+        variant="outlined"
+        fullWidth
         onClick={() => navigate("/register")}
       >
-        Not registered yet? Sign up here
+        Sign up here
       </Button>
-    </Container>
+    </CommonFormLayout>
   );
 };
 

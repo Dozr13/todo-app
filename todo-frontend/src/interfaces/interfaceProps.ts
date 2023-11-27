@@ -38,7 +38,7 @@ export interface ReactNodeChildrenProps {
 export interface Task {
   _id: string;
   title: string;
-  description: string;
+  description?: string;
   dueDate: Date;
   status: "pending" | "in-progress" | "completed";
 }

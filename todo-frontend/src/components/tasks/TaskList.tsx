@@ -5,6 +5,7 @@ import {
   DraggableProvided,
   DropResult,
 } from "react-beautiful-dnd";
+import { initialTaskValues } from "../../constants/initialValues";
 import { useModal } from "../../hooks/useModal";
 import { useSnackbarActions } from "../../hooks/useSnackbarActions";
 import { useTaskOperations } from "../../hooks/useTaskOperations";
@@ -39,13 +40,7 @@ const TaskList = () => {
   };
 
   const openAddTaskModal = useCallback(() => {
-    openModal(ModalMode.Add, {
-      _id: "",
-      title: "",
-      description: "",
-      dueDate: new Date(),
-      status: "pending",
-    });
+    openModal(ModalMode.Add, initialTaskValues);
   }, [openModal]);
 
   const handleDragEnd = useCallback(

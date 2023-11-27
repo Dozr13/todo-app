@@ -18,7 +18,6 @@ const Dashboard: React.FC = () => {
     try {
       await deleteAccount();
       showSuccessSnackbar("Account successfully deleted");
-      localStorage.removeItem("token");
       navigate("/login");
     } catch (error) {
       showErrorSnackbar(

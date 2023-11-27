@@ -1,13 +1,31 @@
 import axiosInstance from "../utils/axiosInstance";
 import handleError from "../utils/errorHandler";
 
+const setToken = (token: string) => {
+  localStorage.setItem("token", token);
+};
+
 export const login = async (username: string, password: string) => {
   try {
     const response = await axiosInstance.post("/auth/login", {
       username,
       password,
     });
+    if (response.data.token) {
+      setToken(response.data.token);
+    } else {
+      console.log("No token received in response");
+    }
     return response.data;
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+export const logout = () => {
+  try {
+    localStorage.removeItem("token");
+    return Promise.resolve("Logged out successfully");
   } catch (error) {
     return handleError(error);
   }
@@ -19,16 +37,9 @@ export const register = async (username: string, password: string) => {
       username,
       password,
     });
-    return response.data;
-  } catch (error) {
-    return handleError(error);
-  }
-};
+    setToken(response.data.token);
 
-export const logout = () => {
-  try {
-    localStorage.removeItem("authToken");
-    window.location.href = "/login";
+    return response.data;
   } catch (error) {
     return handleError(error);
   }
@@ -36,8 +47,9 @@ export const logout = () => {
 
 export const deleteAccount = async () => {
   try {
-    const response = await axiosInstance.delete("/auth/delete-account");
-    return response.data;
+    await axiosInstance.delete("/auth/delete-account");
+    logout();
+    return Promise.resolve("Account successfully deleted");
   } catch (error) {
     return handleError(error);
   }
